@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub 加速 · 链接镜像转换工具</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="notification" id="notification">
+  <div class="notif-icon" id="notifIcon">✓</div>
+  <div class="notif-body">
+    <div class="notif-title" id="notifTitle">节点优选完成</div>
+    <div class="notif-desc" id="notifDesc"></div>
+  </div>
+  <button class="notif-close" id="notifClose" aria-label="关闭">×</button>
+</div>
+
+<div class="container">
+
+  <header class="hero">
+    <h1 class="hero-title">GitHub 加速</h1>
+    <p class="hero-desc">
+      粘贴 GitHub 链接，一键转换为加速镜像。纯前端工具，链接仅在本地拼接。
+    </p>
+  </header>
+
+  <div class="card input-card">
+    <h2 class="input-card-title">粘贴 GitHub 链接</h2>
+
+    <div class="input-row">
+      <textarea
+        id="input"
+        rows="1"
+        spellcheck="false"
+        placeholder="https://github.com/user/repo 或 releases/download/..."
+      ></textarea>
+      <button class="btn-convert" id="convertBtn">转换</button>
+    </div>
+
+    <div class="input-options">
+      <label class="checkbox-label">
+        <input type="checkbox" id="autoConvert">
+        <span>输入即实时转换</span>
+      </label>
+      <button class="btn-clear" id="clearBtn">清空</button>
+    </div>
+
+    <p class="input-hint">
+      支持：仓库主页 / 文件 / Raw / Release / Archive / clone / gist · 多行粘贴可批量转换
+    </p>
+  </div>
+
+  <div class="card is-hidden" id="resultCard">
+    <div class="card-title card-title-flex">
+      <span>🔗 加速结果</span>
+      <button class="btn-secondary btn-small" id="copyAllBtn" disabled>一键复制全部</button>
+    </div>
+    <div id="results"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title card-title-flex">
+      <span>⚡ 节点自动优选</span>
+      <button class="btn-secondary btn-small" id="retestBtn">重新检测</button>
+    </div>
+    <p class="panel-hint" id="latencyHint">正在后台检测节点延时…</p>
+    <div class="node-list" id="nodeList"></div>
+  </div>
+
+  <div class="card faq-card">
+    <div class="card-title">常见问题</div>
+
+    <div class="faq-list">
+
+      <details class="faq-item">
+        <summary>这个工具是干什么的？安全吗？</summary>
+        <div class="faq-answer">
+          <p>本工具是一个<strong>纯前端链接转换器</strong>，不代理、不缓存任何数据。你粘贴的链接仅在浏览器本地拼接，生成带加速前缀的新链接，由浏览器直接访问对应的公益镜像站。</p>
+          <p>本工具不接触你的文件内容，也不会记录任何链接历史。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>链接无法下载 / 返回 404 怎么办？</summary>
+        <div class="faq-answer">
+          <p>常见原因有三个：</p>
+          <ul>
+            <li><strong>镜像同步延迟</strong>：镜像站采用被动缓存，原仓库刚更新或删除文件时可能返回过期索引。</li>
+            <li><strong>Release 资源直连 CDN</strong>：部分镜像不拦截 <code>objects.githubusercontent.com</code> 的下载请求，导致 Release 加速失效。</li>
+            <li><strong>镜像站临时故障</strong>：公益镜像的可用性随网络环境变化。</li>
+          </ul>
+          <p>建议换成列表中其他节点重试，或先在 <code>github.com</code> 确认原始链接是否可访问。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>可以用加速链接来 git clone 吗？</summary>
+        <div class="faq-answer">
+          <p>可以。部分镜像站支持 HTTPS 协议的 git clone：</p>
+          <pre><code>git clone https://github.akams.cn/https://github.com/user/repo.git</code></pre>
+          <p>也可以配置 <code>git insteadOf</code> 让所有 GitHub 操作自动走镜像：</p>
+          <pre><code>git config --global url."https://github.akams.cn/https://github.com/".insteadOf "https://github.com/"</code></pre>
+          <p>注意：克隆完成后建议将 remote 改回原始地址，否则后续 push 可能失败。</p>
+        </div>
+      </details>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    纯前端工具 · 链接仅在浏览器本地拼接 · 节点来自公开的公益 GitHub 镜像服务
+  </div>
+
+</div>
+
+<script src="js/nodes.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
